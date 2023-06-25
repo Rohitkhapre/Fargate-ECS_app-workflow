@@ -1,24 +1,109 @@
 {
-    "family": "fargate-ecs", 
-    "networkMode": "awsvpc",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:731253471521:task-definition/demo-deploy:1",
     "containerDefinitions": [
         {
-            "name": "flask-app", 
-            "image": "731253471521.dkr.ecr.us-east-1.amazonaws.com/docker-ecs-repo:27", 
+            "name": "demo-deploy",
+            "image": "731253471521.dkr.ecr.us-east-1.amazonaws.com/docker-ecs-repo:29",
+            "cpu": 0,
             "portMappings": [
                 {
-                    "containerPort": 5000, 
-                    "hostPort": 5000, 
-                    "protocol": "tcp"
+                    "name": "demo-deploy-443-tcp",
+                    "containerPort": 443,
+                    "hostPort": 443,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
                 }
-            ]
-            
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "/ecs/demo-deploy",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        },
+        {
+            "name": "aws-otel-collector",
+            "image": "public.ecr.aws/aws-observability/aws-otel-collector:v0.30.0",
+            "cpu": 0,
+            "portMappings": [],
+            "essential": true,
+            "command": [
+                "--config=/etc/ecs/ecs-cloudwatch.yaml"
+            ],
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "/ecs/ecs-aws-otel-sidecar-collector",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
         }
-    ], 
+    ],
+    "family": "demo-deploy",
+    "taskRoleArn": "arn:aws:iam::731253471521:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::731253471521:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
     "requiresCompatibilities": [
         "FARGATE"
-    ], 
-    "cpu": "256", 
-    "memory": "512",
-    "executionRoleArn": "arn:aws:iam::731253471521:role/ecsTaskExecutionRole"
+    ],
+    "cpu": "512",
+    "memory": "1024",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2023-06-25T17:50:40.997Z",
+    "registeredBy": "arn:aws:iam::731253471521:root",
+    "tags": []
 }
