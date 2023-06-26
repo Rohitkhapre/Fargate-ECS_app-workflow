@@ -14,6 +14,6 @@ COPY . .
 ENV RDS_HOST=rds-database-1.cvnkpkz7gh8g.us-east-1.rds.amazonaws.com
 ENV RDS_DATABASE=mydb
 
-EXPOSE 443
+EXPOSE 80
 
 CMD ["python", "app.py"]
